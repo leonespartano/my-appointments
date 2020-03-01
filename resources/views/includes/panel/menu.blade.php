@@ -2,17 +2,17 @@
 	 <h6 class="navbar-heading text-muted">Gestionar Datos</h6>
    <ul class="navbar-nav">
    	<li class="nav-item">
-   		<a class="nav-link" href="./index.html">
+   		<a class="nav-link" href="/home">
    			<i class="ni ni-tv-2 text-primary"></i> Dashboard
    		</a>
    	</li>
    	<li class="nav-item">
-   		<a class="nav-link" href="./examples/icons.html">
+   		<a class="nav-link" href="/specialties">
    			<i class="ni ni-planet text-yellow"></i> Especialidades
    		</a>
    	</li>
    	<li class="nav-item">
-   		<a class="nav-link" href="./examples/maps.html">
+   		<a class="nav-link" href="/doctors">
    			<i class="ni ni-single-02 text-orange"></i> Medicos
    		</a>
    	</li>
