@@ -21,5 +21,9 @@ $factory->define(App\User::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+        'dni' => $faker->randomNumber(8, true),
+        'address' => $faker->address,
+        'phone' => $faker->e164PhoneNumber,
+        'role' => $faker->randomElement(['patient', 'doctor'])
     ];
 });
