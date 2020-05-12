@@ -27,7 +27,8 @@ class CreateWorkDaysTable extends Migration
 
             //Declaración de clave foranea
             $table->unsignedInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
 
             $table->timestamps();
         });
@@ -40,6 +41,7 @@ class CreateWorkDaysTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Schema::dropIfExists('work_days');
     }
 }

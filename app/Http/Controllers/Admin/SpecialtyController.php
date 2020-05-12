@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use App\Specialty;
+
 use Illuminate\Http\Request;
+use App\Specialty;
 use App\Http\Controllers\Controller;
 
 class SpecialtyController extends Controller

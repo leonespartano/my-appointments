@@ -23,8 +23,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::middleware(['auth', 'admin'])->namespace('Admin')->group(function () {
     //Specialty
     Route::get('/specialties', 'SpecialtyController@index');
-    Route::get('/specialties/create', 'Admin\SpecialtyController@create'); //se visita la pagina de registro
-    Route::get('/specialties/{specialty}/edit', 'Admin\SpecialtyController@edit');
+    Route::get('/specialties/create', 'SpecialtyController@create'); //se visita la pagina de registro
+    Route::get('/specialties/{specialty}/edit', 'SpecialtyController@edit');
 
     Route::post('/specialties', 'SpecialtyController@store'); //envio de formulario de registro para crear
     Route::put('/specialties/{specialty}', 'SpecialtyController@update'); //envio de registro actualizado
@@ -36,9 +36,34 @@ Route::middleware(['auth', 'admin'])->namespace('Admin')->group(function () {
 
     //patients
     Route::resource('patients', 'PatientController');
+
+    //charts
+    Route::get('/charts/appointments/line', 'ChartController@appointments');
+    Route::get('/charts/doctors/column', 'ChartController@doctors');
+    Route::get('/charts/doctors/column/data', 'ChartController@doctorsJson');
+
+
 });
 
-Route::middleware(['auth', 'doctor'])->namespace('Doctor')->group(function () {
+    Route::middleware(['auth', 'doctor'])->namespace('Doctor')->group(function () {
     Route::get('/schedule','ScheduleController@edit');
     Route::post('/schedule','ScheduleController@store');
 });
+    Route::middleware('auth')->group(function () {
+         //
+        Route::get('/appointments/create', 'AppointmentController@create');
+        Route::post('/appointments', 'AppointmentController@store');
+
+        Route::get('/appointments', 'AppointmentController@index');
+        //Devuel información particular de una cita
+        Route::get('/appointments/{appointment}', 'AppointmentController@show');
+
+        Route::get('/appointments/{appointment}/cancel', 'AppointmentController@showCancelForm');
+        Route::post('/appointments/{appointment}/cancel', 'AppointmentController@postCancel');
+        Route::post('/appointments/{appointment}/confirm', 'AppointmentController@postConfirm');
+
+
+    });
+
+
+

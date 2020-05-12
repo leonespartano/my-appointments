@@ -22,6 +22,16 @@
 				{{session('notification')}}
 			</div>
 			@endif
+			@if(session('errors'))
+			<div class="alert alert-danger" role="alert">
+				Los cambios se han guardado, pero tener en cuenta que:
+					<ul>
+						@foreach (session('errors') as $error)
+							<li>{{$error}}</li>
+						@endforeach
+					</ul>
+			</div>
+			@endif
 		</div>
 
 		<div class="table-responsive">
@@ -37,30 +47,51 @@
 				</thead>
 				<tbody>
 
-					@foreach ($days as $key => $day)
+					@foreach ($workdays as $key => $workday)
 					<tr>
-						<th>{{$day}}</th>
+						<th>{{$days[$key]}}</th>
 						<td>
 
 							<label class="custom-toggle">
-								<input type="checkbox" name="active[]" value="{{$key}}">
+								<input type="checkbox" name="active[]" value="{{$key}}"
+								@if($workday -> active) checked @endif>
 								<span class="custom-toggle-slider round-circle"></span>
 							</label>
 						</td>
 						<td>
 							<div class="row">
 								<div class="col">
-									<select class="form-control" name="morning_start[]>
-										@for ($i=5; $i<12; $i++)
-											<option value="{{$i}}:00">{{$i}}:00am</option>
-											<option value="{{$i}}:30">{{$i}}:30am</option>
+									<select class="form-control" name="morning_start[]">
+										@for ($i=5; $i<=11; $i++)
+											<option value="{{($i<10 ? '0':'').$i}}:00"
+											@if ($i.':00 AM'==$workday->morning_start)
+											selected
+											@endif>
+												{{$i}}:00 AM
+												</option>
+											<option value="{{($i<10 ? '0':'').$i}}:30"
+												@if ($i.':30 AM'==$workday->morning_start)
+												selected
+											@endif>
+												{{$i}}:30 AM
+											</option>
 										@endfor
 									</select> </div>
 								<div class="col">
-									<select class="form-control" name="morning_end[]>
-										@for ($i=5; $i<12; $i++)
-											<option value="{{$i}}:00">{{$i}}:00am</option>
-											<option value="{{$i}}:30">{{$i}}:30am</option>
+									<select class="form-control" name="morning_end[]">
+										@for ($i=5; $i<=11; $i++)
+											<option value="{{($i<10 ? '0':'').$i}}:00"
+											@if ($i.':00 AM'==$workday->morning_end)
+											selected
+											@endif>
+												{{$i}}:00 AM
+												</option>
+											<option value="{{($i<10 ? '0':'').$i}}:30"
+											@if ($i.':30 AM'==$workday->morning_end)
+											selected
+											@endif>
+												{{$i}}:30 AM
+												</option>
 										@endfor
 									</select>
 								</div>
@@ -70,17 +101,37 @@
 						<td>
 							<div class="row">
 								<div class="col">
-									<select class="form-control" name="afternoon_start[]>
-										@for ($i=1; $i < 12; $i++)
-											<option value="{{$i + 12}}:00">{{$i}}:00pm</option>
-											<option value="{{$i + 12}}:30">{{$i}}:30pm</option>
+									<select class="form-control" name="afternoon_start[]">
+										@for ($i=1; $i <= 12; $i++)
+											<option value="{{$i + 12}}:00"
+											@if ($i.':00 PM'==$workday->afternoon_start)
+											selected
+											@endif>
+												{{$i}}:00 PM
+												</option>
+											<option value="{{$i + 12}}:30"
+											@if ($i.':30 PM'==$workday->afternoon_start)
+											selected
+											@endif>
+												{{$i}}:30 PM
+												</option>
 										@endfor
 									</select> </div>
 								<div class="col">
-									<select class="form-control" name="afternoon_end[]>
-										@for ($i=1; $i < 12; $i++)
-											<option value="{{$i + 12}}:00">{{$i}}:00pm</option>
-											<option value="{{$i + 12}}:00">{{$i}}:30pm</option>
+									<select class="form-control" name="afternoon_end[]">
+										@for ($i=1; $i <= 12; $i++)
+											<option value="{{$i + 12}}:00"
+											@if ($i.':00 PM'==$workday->afternoon_end)
+											selected
+											@endif>
+												{{$i}}:00 PM
+												</option>
+											<option value="{{$i + 12}}:00"
+											@if ($i.':30 PM'==$workday->afternoon_end)
+											selected
+											@endif>
+												{{$i}}:30 PM
+												</option>
 										@endfor
 									</select>
 								</div>

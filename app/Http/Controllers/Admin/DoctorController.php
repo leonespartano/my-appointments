@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Controllers\Controller;
+use App\Specialty;
 
 class DoctorController extends Controller
 {
@@ -22,7 +23,8 @@ class DoctorController extends Controller
      */
     public function create()
     {
-        return view('doctors.create');
+        $specialties = Specialty::all();
+        return view('doctors.create', \compact('specialties'));
     }
 
     /**
@@ -33,21 +35,24 @@ class DoctorController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());
         $rules = [
             'name' => 'required|min:3',
             'email' => 'required|email',
             'dni' => 'nullable|digits:8',
             'address' => 'nullable|min:5',
-            'phone' => 'required|min:6'
+            'phone' => 'nullable|min:6'
         ];
         $this->validate($request, $rules);
-        User::create(
+        $user = User::create(
             $request->only('name', 'email', 'dni', 'address', 'phone')
                 + [
                     'role' => 'doctor',
                     'password' => bcrypt($request->input('password'))
                 ]
         );
+
+        $user->specialties()->attach($request->input('specialties'));
 
         $notification = 'El médico se ha registrado correctamente. ';
         return redirect('/doctors')->with(compact('notification'));
@@ -73,7 +78,9 @@ class DoctorController extends Controller
     public function edit($id)
     {
         $doctor = User::doctors()->findOrFail($id);
-        return view('doctors.edit', \compact('doctor'));
+        $specialties = Specialty::all();
+        $specialty_ids = $doctor->specialties()->pluck('specialties.id');
+        return view('doctors.edit', \compact('doctor', 'specialties', 'specialty_ids'));
     }
 
     /**
@@ -90,7 +97,7 @@ class DoctorController extends Controller
             'email' => 'required|email',
             'dni' => 'nullable|digits:8',
             'address' => 'nullable|min:5',
-            'phone' => 'required|min:6'
+            'phone' => 'nullable|min:6'
         ];
         $this->validate($request, $rules);
         $user = User::doctors()->findOrFail($id);
@@ -103,6 +110,8 @@ class DoctorController extends Controller
 
         $user->save();
 
+        $user->specialties()->sync($request->input('specialties'));
+
         $notification = 'La información del medico se ha actualizado correctamente.';
         return redirect('/doctors')->with(compact('notification'));
     }
@@ -113,12 +122,14 @@ class DoctorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $doctor)
+    public function destroy($id)
     {
-        $doctorName = $doctor->name;
-        $doctor->delete();
+        $user = User::find($id);
+        //$doctorName = $doctor->name;
 
-        $notification = "El médico $doctorName se ha eliminado correctamente.";
+       $user->delete();
+
+        //$notification = "El médico $doctorName se ha eliminado correctamente.";
         return \redirect('/doctors')->with(\compact('notification'));
     }
 }
